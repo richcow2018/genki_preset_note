@@ -109,6 +109,8 @@ class AdminPresetNoteController extends ModuleAdminController
             ],
         ];
 
+        $this->addJS(_MODULE_DIR_ . $this->module->name . '/views/js/admin/form_create.js');
+
         return parent::renderForm();
     }
 

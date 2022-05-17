@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>award_img_manager</name>
-    <displayName><![CDATA[Award Image Manager]]></displayName>
+    <name>genki_preset_note</name>
+    <displayName><![CDATA[Genki Preset Note Manager]]></displayName>
     <version><![CDATA[1.0]]></version>
-    <description><![CDATA[This module allows you to manage awards&#039; image]]></description>
-    <author><![CDATA[Oliver]]></author>
+    <description><![CDATA[This module allows you to manage preset note for invoice and DN]]></description>
+    <author><![CDATA[Genkiware]]></author>
     <tab><![CDATA[front_office_features]]></tab>
 	<confirmUninstall><![CDATA[Are you sure to uninstall this module?]]></confirmUninstall>
-    <is_configurable>0</is_configurable>
+    <is_configurable>1</is_configurable>
     <need_instance>0</need_instance>
 	<limited_countries></limited_countries>
 </module>
