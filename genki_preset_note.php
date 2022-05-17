@@ -1,16 +1,16 @@
 <?php
 /**
- * 2020-2022 Genkiware
+ * 2022 Genkiware
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * This file is licenced under the GNU General Public License, version 3 (GPL-3.0).
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
  *
  *  @author     Genkiware <info@genkiware.com>
  *  @copyright  2022 Genkiware
- *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  @license    https://opensource.org/licenses/GPL-3.0 GNU General Public License version 3
  */
 
 if (!defined('_PS_VERSION_')) exit;
@@ -20,7 +20,7 @@ require_once(dirname(__FILE__) . '/vendor/autoload.php');
 use Genkiware\PresetNote\classes\PresetNote;
 use Genkiware\PresetNote\classes\GenkiTools;
 
-class Genki_Preset_Note extends Module
+class Genki_Preset_Note extends \Module
 {
     private $_html = '';
     private $_postErrors = array();
@@ -62,6 +62,8 @@ class Genki_Preset_Note extends Module
      * @return bool
      */
     private function installDB() {
+        $db = Db::getInstance();
+
         $note_table = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'genki_preset_note` (
             `id_genki_preset_note` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
             `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'1\',
@@ -76,9 +78,16 @@ class Genki_Preset_Note extends Module
             `note` TEXT NOT NULL,
             PRIMARY KEY (`id_genki_preset_note`, `id_lang`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+
+        $note_order_table = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'genki_preset_note_order` (
+            `id_order` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `note_content` TEXT NOT NULL,
+            PRIMARY KEY (`id_order`)
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
         
-        return Db::getInstance()->execute($note_table) &&
-            Db::getInstance()->execute($note_lang_table);
+        return $db->execute($note_table) &&
+            $db->execute($note_lang_table) &&
+            $db->execute($note_order_table);
     }
 
     /**
@@ -87,11 +96,15 @@ class Genki_Preset_Note extends Module
      * @return bool
      */
     private function uninstallDB() {
+        $db = Db::getInstance();
+
         $note_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note`';
         $note_lang_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note_lang`';
+        $note_order_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note_order`';
         
-        return Db::getInstance()->execute($note_table) &&
-            Db::getInstance()->execute($note_lang_table);
+        return $db->execute($note_table) &&
+            $db->execute($note_lang_table) &&
+            $db->execute($note_order_table);
     }
 
     /**
@@ -102,6 +115,7 @@ class Genki_Preset_Note extends Module
     public function hooksRegistration() {
         $hooks = [
             'displayPDFInvoice',
+            'displayAdminOrderSide',
         ];
 
         return $this->registerHook($hooks);
@@ -177,5 +191,12 @@ class Genki_Preset_Note extends Module
             }
         }
         return true;
+    }
+
+    public function getContent() {
+        $pn = new PresetNote(1);
+        echo '<pre>';var_dump($pn);echo '</pre>';exit;
+
+        return 'asd';
     }
 }

@@ -1,16 +1,16 @@
 <?php
 /**
- * 2020-2022 Genkiware
+ * 2022 Genkiware
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * This file is licenced under the GNU General Public License, version 3 (GPL-3.0).
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
  *
  *  @author     Genkiware <info@genkiware.com>
  *  @copyright  2022 Genkiware
- *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  @license    https://opensource.org/licenses/GPL-3.0 GNU General Public License version 3
  */
 
 namespace Genkiware\PresetNote\classes;
