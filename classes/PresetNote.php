@@ -37,12 +37,20 @@ class PresetNote extends ObjectModel
     public static $definition = [
         'table' => 'genki_preset_note',
         'primary' => 'id_genki_preset_note',
-        'multilang' => true,
         'fields' => [
-            'note' => ['type' => self::TYPE_STRING, 'required' => true, 'validate' => 'isMessage', 'lang' => true],
+            'note' => ['type' => self::TYPE_STRING, 'required' => true, 'validate' => 'isMessage'],
             'active'    => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add'  => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd'  => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
+
+    public static function getAllNotes() {
+        $sql = new DbQuery();
+        $sql->select('note');
+        $sql->from('genki_preset_note', 'pn');
+        $sql->orderBy('pnl.note');
+
+        return Db::getInstance()->executeS($sql);
+    }
 }

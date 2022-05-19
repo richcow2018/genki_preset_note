@@ -23,7 +23,6 @@ class AdminPresetNoteController extends ModuleAdminController
         $this->bootstrap = true;
         $this->table = 'genki_preset_note';
         $this->className = 'Genkiware\PresetNote\classes\PresetNote';
-        $this->lang = true;
         parent::__construct();
 
         $this->fields_list = [
@@ -88,8 +87,8 @@ class AdminPresetNoteController extends ModuleAdminController
                     'label' => $this->l('Note'),
                     'name' => 'note',
                     'id' => 'note',
+                    'class' => 'note_content',
                     'col' => 6,
-                    'lang' => true,
                     'required' => true,
                 ],
                 [

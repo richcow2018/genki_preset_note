@@ -66,17 +66,11 @@ class Genki_Preset_Note extends \Module
 
         $note_table = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'genki_preset_note` (
             `id_genki_preset_note` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `note` TEXT NOT NULL,
             `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'1\',
             `date_add` DATETIME NOT NULL,
             `date_upd` DATETIME NOT NULL,
             PRIMARY KEY (`id_genki_preset_note`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-
-        $note_lang_table = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'genki_preset_note_lang` (
-            `id_genki_preset_note` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-            `id_lang` INT(10) UNSIGNED NOT NULL,
-            `note` TEXT NOT NULL,
-            PRIMARY KEY (`id_genki_preset_note`, `id_lang`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
         $note_order_table = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'genki_preset_note_order` (
@@ -86,7 +80,6 @@ class Genki_Preset_Note extends \Module
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
         
         return $db->execute($note_table) &&
-            $db->execute($note_lang_table) &&
             $db->execute($note_order_table);
     }
 
@@ -99,11 +92,9 @@ class Genki_Preset_Note extends \Module
         $db = Db::getInstance();
 
         $note_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note`';
-        $note_lang_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note_lang`';
         $note_order_table = 'DROP TABLE `'._DB_PREFIX_.'genki_preset_note_order`';
         
         return $db->execute($note_table) &&
-            $db->execute($note_lang_table) &&
             $db->execute($note_order_table);
     }
 
