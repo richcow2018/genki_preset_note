@@ -15,6 +15,8 @@
 
 namespace Genkiware\PresetNote\classes;
 
+use \Db;
+use \DBQuery;
 use \ObjectModel;
 
 class PresetNote extends ObjectModel
@@ -49,8 +51,17 @@ class PresetNote extends ObjectModel
         $sql = new DbQuery();
         $sql->select('note');
         $sql->from('genki_preset_note', 'pn');
-        $sql->orderBy('pnl.note');
+        $sql->orderBy('pn.note');
 
         return Db::getInstance()->executeS($sql);
+    }
+
+    public static function getNoteByOrderId($id_order) {
+        $sql = new DbQuery();
+        $sql->select('note_content');
+        $sql->from('genki_preset_note_order', 'pno');
+        $sql->where('id_order = ' . $id_order);
+
+        return Db::getInstance()->getValue($sql);
     }
 }

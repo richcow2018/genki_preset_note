@@ -119,4 +119,31 @@ class AdminPresetNoteController extends ModuleAdminController
         }
         return parent::getFieldsValue($obj);
     }
+
+    public function processAddOrderNote() {
+        $id_order = (int) Tools::getValue('id_order');
+
+        $result = Db::getInstance()->insert('genki_preset_note_order', [
+            'id_order' => $id_order,
+            'note_content' => pSQL(Tools::getValue('order_note')),
+        ]);
+
+        $genki_note = ($result) ? '1' : '0';
+        $this->redirect_after = $this->context->link->getAdminLink('AdminOrders', true, ['route' => 'admin_orders_view', 'orderId' => $id_order, 'genki_note' => $genki_note]);
+
+        return $result;
+    }
+
+    public function processUpdateOrderNote() {
+        $id_order = (int) Tools::getValue('id_order');
+
+        $result = Db::getInstance()->update('genki_preset_note_order', [
+            'note_content' => pSQL(Tools::getValue('order_note')),
+        ], 'id_order = ' . $id_order, 1);
+
+        $genki_note = ($result) ? '1' : '0';
+        $this->redirect_after = $this->context->link->getAdminLink('AdminOrders', true, ['route' => 'admin_orders_view', 'orderId' => $id_order, 'genki_note' => $genki_note]);
+
+        return $result;
+    }
 }

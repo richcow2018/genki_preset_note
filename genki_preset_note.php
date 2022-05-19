@@ -74,7 +74,7 @@ class Genki_Preset_Note extends \Module
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
         $note_order_table = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'genki_preset_note_order` (
-            `id_order` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `id_order` INT(10) UNSIGNED NOT NULL,
             `note_content` TEXT NOT NULL,
             PRIMARY KEY (`id_order`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
@@ -107,6 +107,7 @@ class Genki_Preset_Note extends \Module
         $hooks = [
             'displayPDFInvoice',
             'displayAdminOrderSide',
+            'actionAdminControllerSetMedia',
         ];
 
         return $this->registerHook($hooks);
@@ -185,9 +186,66 @@ class Genki_Preset_Note extends \Module
     }
 
     public function getContent() {
-        $pn = new PresetNote(1);
-        echo '<pre>';var_dump($pn);echo '</pre>';exit;
+        $sql = new DbQuery();
+        $sql->select('note_content');
+        $sql->from('genki_preset_note_order', 'pno');
+        $sql->where('id_order = 1');
+
+        echo '<pre>';var_dump(Db::getInstance()->getValue($sql));echo '</pre>';exit;
 
         return 'asd';
+    }
+
+    /**
+     * JS and CSS required for backoffice order details page
+     */
+    public function hookActionAdminControllerSetMedia($params) {
+        if (!$this->active) return;
+
+        if (strtolower(Tools::getValue('controller'))=="adminorders") {
+            // Get Order ID, return if not found (i.e. Not in Order Detail page, but Order list page)
+            $id_order = Tools::getValue('id_order');
+            if (!$id_order) return;
+
+            // Media::addJsDef([
+            //     'id_order' => $id_order,
+            //     'fps_state' => $fps_state,
+            //     'payment_record_form' => $payment_record_form,
+            //     'redirect_link_base' => $redirect_link_base,
+            // ]);
+
+            $this->context->controller->addJS($this->_path . 'views/js/admin/admin_order_form.js');
+        }
+    }
+
+    public function hookDisplayAdminOrderSide($params) {
+        if (!$this->active) return;
+
+        // If add / update action is done
+        if (Tools::getValue('genki_note') == 0) {
+            $this->get('session')->getFlashBag()->add('error', 'Error when updating data. Please try again');
+        } else {
+            $this->get('session')->getFlashBag()->add('success', 'Order note updated successfully');
+        }
+        
+        $notes = PresetNote::getAllNotes();
+        
+        $form_action = 'UpdateOrderNote';
+        $note_content = PresetNote::getNoteByOrderId($params['id_order']);
+        if (!$note_content) {
+            $note_content = '';
+            $form_action = 'AddOrderNote';
+        }
+        
+        $this->context->smarty->assign([
+            'id_order' => $params['id_order'],
+            'notes' => $notes,
+            'note_config' => $this->_path . 'index.php?controller=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+            'note_content' => $note_content,
+            'form_action' => $this->context->link->getAdminLink('AdminPresetNote', true, [], ['action' => $form_action]),
+            'order_link' => $this->context->link->getAdminLink('AdminOrders', true, ['route' => 'admin_orders_view', 'orderId' => $params['id_order']]),
+        ]);
+
+        return $this->fetch($this->local_path . 'views/templates/admin/preset_note_box.tpl');
     }
 }
