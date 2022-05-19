@@ -32,7 +32,7 @@ class Genki_Preset_Note extends \Module
         $this->author                 = 'Genkiware';
         $this->bootstrap              = true;
         $this->need_instance          = 0;
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.7', 'max' => _PS_VERSION_];
 
         parent::__construct();
 
