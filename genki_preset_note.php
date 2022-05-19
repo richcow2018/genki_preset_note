@@ -106,6 +106,7 @@ class Genki_Preset_Note extends \Module
     public function hooksRegistration() {
         $hooks = [
             'displayPDFInvoice',
+            'displayPDFDeliverySlip',
             'displayAdminOrderSide',
             'actionAdminControllerSetMedia',
         ];
@@ -222,7 +223,7 @@ class Genki_Preset_Note extends \Module
         if (!$this->active) return;
 
         // If add / update action is done
-        if (Tools::getValue('genki_note') == 0) {
+        if (Tools::getValue('genki_note') == '0') {
             $this->get('session')->getFlashBag()->add('error', 'Error when updating data. Please try again');
         } else {
             $this->get('session')->getFlashBag()->add('success', 'Order note updated successfully');
@@ -247,5 +248,17 @@ class Genki_Preset_Note extends \Module
         ]);
 
         return $this->fetch($this->local_path . 'views/templates/admin/preset_note_box.tpl');
+    }
+
+    public function getOrderNote($id_order) {
+        return PresetNote::getNoteByOrderId($id_order);
+    }
+
+    public function hookDisplayPDFInvoice($params) {
+        return nl2br($this->getOrderNote($params['object']->id_order));
+    }
+
+    public function hookDisplayPDFDeliverySlip($params) {
+        return nl2br($this->getOrderNote($params['object']->id_order));
     }
 }
