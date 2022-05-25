@@ -109,6 +109,7 @@ class Genki_Preset_Note extends \Module
             'displayPDFDeliverySlip',
             'displayAdminOrderSide',
             'actionAdminControllerSetMedia',
+            'actionValidateOrder',
         ];
 
         return $this->registerHook($hooks);
@@ -186,17 +187,6 @@ class Genki_Preset_Note extends \Module
         return true;
     }
 
-    public function getContent() {
-        $sql = new DbQuery();
-        $sql->select('note_content');
-        $sql->from('genki_preset_note_order', 'pno');
-        $sql->where('id_order = 1');
-
-        echo '<pre>';var_dump(Db::getInstance()->getValue($sql));echo '</pre>';exit;
-
-        return 'asd';
-    }
-
     /**
      * JS and CSS required for backoffice order details page
      */
@@ -248,6 +238,18 @@ class Genki_Preset_Note extends \Module
         ]);
 
         return $this->fetch($this->local_path . 'views/templates/admin/preset_note_box.tpl');
+    }
+
+    public function hookActionValidateOrder($params) {
+        if ($params['order']->module == 'hspointofsalepro') {
+            $id_order = $params['order']->id;
+            $msg = Message::getMessageByCartId((int)$params['cart']->id);
+
+            return Db::getInstance()->insert('genki_preset_note_order', [
+                'id_order' => $id_order,
+                'note_content' => pSQL($msg['message']),
+            ]);
+        }
     }
 
     public function getOrderNote($id_order) {
