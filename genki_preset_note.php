@@ -231,7 +231,7 @@ class Genki_Preset_Note extends \Module
         $this->context->smarty->assign([
             'id_order' => $params['id_order'],
             'notes' => $notes,
-            'note_config' => $this->_path . 'index.php?controller=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+            'note_config' => $this->context->link->getAdminLink('AdminPresetNote'),
             'note_content' => $note_content,
             'form_action' => $this->context->link->getAdminLink('AdminPresetNote', true, [], ['action' => $form_action]),
             'order_link' => $this->context->link->getAdminLink('AdminOrders', true, ['route' => 'admin_orders_view', 'orderId' => $params['id_order']]),
