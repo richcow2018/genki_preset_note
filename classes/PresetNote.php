@@ -64,4 +64,13 @@ class PresetNote extends ObjectModel
 
         return Db::getInstance()->getValue($sql);
     }
+
+    public static function isRecordExist($id_order) {
+        $sql = new DbQuery();
+        $sql->select('id_order');
+        $sql->from('genki_preset_note_order', 'pno');
+        $sql->where('id_order = ' . $id_order);
+
+        return (bool) Db::getInstance()->getValue($sql);
+    }
 }

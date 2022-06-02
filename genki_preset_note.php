@@ -221,11 +221,13 @@ class Genki_Preset_Note extends \Module
         
         $notes = PresetNote::getAllNotes();
         
-        $form_action = 'UpdateOrderNote';
-        $note_content = PresetNote::getNoteByOrderId($params['id_order']);
-        if (!$note_content) {
-            $note_content = '';
+        $has_record = PresetNote::isRecordExist($params['id_order']);
+        if ($has_record) {
+            $form_action = 'UpdateOrderNote';
+            $note_content = PresetNote::getNoteByOrderId($params['id_order']);
+        } else {
             $form_action = 'AddOrderNote';
+            $note_content = '';
         }
         
         $this->context->smarty->assign([
